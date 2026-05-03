@@ -53,8 +53,12 @@ Desarrollar una aplicación web que permita a los micronegocios locales mejorar 
 
 ### Frontend
 
-* HTML, CSS, JavaScript
-* Integración con API REST
+* React 18
+* Vite
+* React Router DOM
+* Leaflet + React Leaflet (mapas interactivos)
+* Axios (cliente HTTP)
+* Context API (gestión de estado y autenticación)
 
 ### Herramientas y servicios
 
@@ -72,21 +76,51 @@ Desarrollar una aplicación web que permita a los micronegocios locales mejorar 
 ```bash
 conexion-local/
 │── backend/
-│   ├── controllers/
-│   ├── models/
-│   ├── routes/
-│   ├── middlewares/
-│   ├── config/
-│   └── app.js
+│   ├── src/
+│   │   ├── config/
+│   │   │   └── database.js
+│   │   ├── controllers/
+│   │   │   ├── authController.js
+│   │   │   ├── negocioController.js
+│   │   │   └── productoController.js
+│   │   ├── models/
+│   │   │   ├── User.js
+│   │   │   ├── Negocio.js
+│   │   │   └── Producto.js
+│   │   ├── routes/
+│   │   │   ├── authRoutes.js
+│   │   │   ├── negocioRoutes.js
+│   │   │   └── productoRoutes.js
+│   │   ├── services/
+│   │   ├── app.js
+│   │   └── server.js
+│   ├── .env
+│   └── package.json
 │
 │── frontend/
-│   ├── assets/
-│   ├── js/
-│   └── index.html
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Navbar.jsx
+│   │   │   └── ProtectedRoute.jsx
+│   │   ├── context/
+│   │   │   └── AuthContext.jsx
+│   │   ├── pages/
+│   │   │   ├── Home.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── Register.jsx
+│   │   │   ├── Dashboard.jsx
+│   │   │   ├── CrearNegocio.jsx
+│   │   │   ├── CrearProducto.jsx
+│   │   │   └── MapaNegocios.jsx
+│   │   ├── services/
+│   │   │   └── api.js
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── index.html
+│   ├── vite.config.js
+│   └── package.json
 │
-│── docker/
 │── README.md
-│── .env.example
 ```
 
 ---
@@ -95,9 +129,9 @@ conexion-local/
 
 ### Requisitos previos
 
-* Node.js (v16 o superior)
-* Docker (opcional)
+* Node.js (v18 o superior)
 * PostgreSQL
+* Docker (opcional)
 
 ### Pasos
 
@@ -108,28 +142,39 @@ git clone https://github.com/alouestt/conexion-local.git
 cd conexion-local
 ```
 
-2. Configurar variables de entorno:
+2. Configurar variables de entorno del backend:
 
 ```bash
-cp .env.example .env
+# Editar backend/.env con las credenciales de la base de datos
+DB_NAME=conexion_local
+DB_USER=postgres
+DB_PASSWORD=tu_contraseña
+DB_HOST=localhost
+DB_DIALECT=postgres
 ```
 
-3. Instalar dependencias:
+3. Instalar dependencias e iniciar el backend:
 
 ```bash
+cd backend
 npm install
+npm run dev
 ```
 
-4. Ejecutar el servidor:
+El servidor quedará disponible en `http://localhost:3000`.
+
+4. En otra terminal, instalar dependencias e iniciar el frontend:
 
 ```bash
+cd frontend
+npm install
 npm run dev
 ```
 
 5. Acceder a la aplicación:
 
 ```
-http://localhost:3000
+http://localhost:5173
 ```
 
 ---

@@ -1,0 +1,161 @@
+.lista-page {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem;
+}
+
+.lista-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.lista-header h1 {
+    font-size: 1.6rem;
+    color: var(--color-primary);
+    margin-bottom: 0.2rem;
+}
+
+.lista-header p {
+    font-size: 0.9rem;
+    color: var(--color-text-muted);
+}
+
+.lista-loading {
+    text-align: center;
+    padding: 3rem;
+    color: var(--color-text-muted);
+}
+
+.lista-empty {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: var(--color-text-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.lista-empty span {
+    font-size: 3rem;
+}
+
+.lista-empty p {
+    font-size: 1rem;
+}
+
+.lista-tabla-wrapper {
+    overflow-x: auto;
+    background: var(--color-white);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.lista-tabla {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+}
+
+.lista-tabla thead {
+    background: var(--color-primary);
+    color: var(--color-white);
+}
+
+.lista-tabla th {
+    padding: 0.85rem 1.1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.85rem;
+    letter-spacing: 0.3px;
+}
+
+.lista-tabla tbody tr {
+    border-bottom: 1px solid var(--color-border);
+    transition: background 0.15s;
+}
+
+.lista-tabla tbody tr:last-child {
+    border-bottom: none;
+}
+
+.lista-tabla tbody tr:hover {
+    background: #f4faf6;
+}
+
+.lista-tabla td {
+    padding: 0.85rem 1.1rem;
+    color: var(--color-text);
+    vertical-align: middle;
+}
+
+.td-id {
+    color: var(--color-text-muted);
+    font-size: 0.82rem;
+    white-space: nowrap;
+}
+
+.td-nombre {
+    font-weight: 600;
+}
+
+.td-desc {
+    max-width: 280px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: var(--color-text-muted);
+}
+
+.td-precio {
+    font-weight: 600;
+    color: var(--color-primary);
+    white-space: nowrap;
+}
+
+.td-badge {
+    text-align: center;
+}
+
+.badge {
+    display: inline-block;
+    background: #e8f5e9;
+    color: var(--color-primary);
+    padding: 0.2rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.negocio-tag {
+    background: #e3f2fd;
+    color: #1565c0;
+    padding: 0.2rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.sin-dato {
+    color: var(--color-border);
+}
+
+.btn-accion {
+    display: inline-block;
+    padding: 0.35rem 0.9rem;
+    background: var(--color-primary);
+    color: var(--color-white);
+    border-radius: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.btn-accion:hover {
+    background: var(--color-primary-light);
+}
