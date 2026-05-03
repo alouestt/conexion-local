@@ -27,7 +27,7 @@ exports.register = async (req, res) => {
     }
 };
 
-// POST /api/login — verifica correo y contrasena, responde con los datos del usuario
+// POST /api/login — verifica correo y contraseña, responde con los datos del usuario
 exports.login = async (req, res) => {
     try {
         const { correo, password } = req.body;
@@ -42,7 +42,7 @@ exports.login = async (req, res) => {
         const validPassword = await bcrypt.compare(password, user.password);
 
         if (!validPassword) {
-            return res.status(401).json({ error: "Contrasena incorrecta" });
+            return res.status(401).json({ error: "Contraseña incorrecta" });
         }
 
         res.json({

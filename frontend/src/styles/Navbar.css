@@ -1,0 +1,71 @@
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 2rem;
+    height: 60px;
+    background: var(--color-primary);
+    color: var(--color-white);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.navbar-brand {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-white);
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    letter-spacing: -0.3px;
+}
+
+.navbar-icon {
+    font-size: 1.1rem;
+}
+
+.navbar-links {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.navbar-links a {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
+    transition: color 0.2s;
+}
+
+.navbar-links a:hover {
+    color: var(--color-white);
+    text-decoration: underline;
+}
+
+.nav-btn-register {
+    background: var(--color-accent);
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    font-weight: 600;
+    color: var(--color-white) !important;
+}
+
+.nav-btn-register:hover {
+    text-decoration: none !important;
+    background: var(--color-accent-light);
+}
+
+.nav-btn-logout {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    color: var(--color-white);
+    padding: 0.4rem 1rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.nav-btn-logout:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
