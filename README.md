@@ -20,23 +20,32 @@ Desarrollar una aplicación web que permita a los micronegocios locales mejorar 
 
 ### Objetivos específicos
 
-* Implementar un sistema de autenticación seguro mediante JWT.
-* Desarrollar funcionalidades CRUD para negocios y productos.
-* Integrar servicios de geolocalización para búsqueda de negocios cercanos.
-* Permitir la gestión de reseñas por parte de los usuarios.
-* Desplegar la aplicación en un entorno accesible en la nube.
+- Implementar un sistema de autenticación seguro mediante JWT.
+- Desarrollar funcionalidades CRUD para negocios y productos.
+- Integrar servicios de geolocalización para búsqueda de negocios cercanos.
+- Permitir la gestión de reseñas por parte de los usuarios.
+- Desplegar la aplicación en un entorno accesible en la nube.
 
 ---
 
 ## Funcionalidades principales
 
-* Registro e inicio de sesión de usuarios
-* Gestión de negocios y productos
-* Búsqueda de negocios por ubicación y categoría
-* Visualización en mapa interactivo (Leaflet + OpenStreetMap)
-* Sistema de reseñas y calificaciones
-* Panel de administración básico
-* Carga de imágenes mediante Cloudinary
+### Implementadas
+
+- Registro e inicio de sesión de usuarios
+- Consulta, creación y edición de negocios
+- Consulta, creación y edición de productos (con selector de negocio)
+- Mapa interactivo de negocios (Leaflet + OpenStreetMap)
+- Panel de usuario autenticado (dashboard)
+- Rutas protegidas por autenticación
+
+### Planificadas
+
+- Búsqueda de negocios por ubicación y categoría
+- Sistema de reseñas y calificaciones
+- Panel de administración
+- Carga de imágenes mediante Cloudinary
+- Gestión de pedidos
 
 ---
 
@@ -44,30 +53,30 @@ Desarrollar una aplicación web que permita a los micronegocios locales mejorar 
 
 ### Backend
 
-* Node.js
-* Express.js
-* PostgreSQL
-* Sequelize ORM
-* JWT (autenticación)
-* Bcrypt (encriptación de contraseñas)
+- Node.js
+- Express.js
+- PostgreSQL
+- Sequelize ORM
+- JWT (autenticación)
+- Bcrypt (encriptación de contraseñas)
 
 ### Frontend
 
-* React 18
-* Vite
-* React Router DOM
-* Leaflet + React Leaflet (mapas interactivos)
-* Axios (cliente HTTP)
-* Context API (gestión de estado y autenticación)
+- React 18
+- Vite
+- React Router DOM
+- Leaflet + React Leaflet (mapas interactivos)
+- Axios (cliente HTTP)
+- Context API (gestión de estado y autenticación)
 
 ### Herramientas y servicios
 
-* Docker
-* GitHub
-* Postman
-* Figma
-* Cloudinary
-* Render / Railway (despliegue)
+- Docker
+- GitHub
+- Postman
+- Figma
+- Cloudinary
+- Render / Railway (despliegue)
 
 ---
 
@@ -109,11 +118,23 @@ conexion-local/
 │   │   │   ├── Login.jsx
 │   │   │   ├── Register.jsx
 │   │   │   ├── Dashboard.jsx
+│   │   │   ├── Negocios.jsx
 │   │   │   ├── CrearNegocio.jsx
+│   │   │   ├── EditarNegocio.jsx
+│   │   │   ├── Productos.jsx
 │   │   │   ├── CrearProducto.jsx
+│   │   │   ├── EditarProducto.jsx
 │   │   │   └── MapaNegocios.jsx
 │   │   ├── services/
 │   │   │   └── api.js
+│   │   ├── styles/
+│   │   │   ├── index.css
+│   │   │   ├── pages.css
+│   │   │   ├── lista.css
+│   │   │   ├── Navbar.css
+│   │   │   ├── Home.css
+│   │   │   ├── Dashboard.css
+│   │   │   └── MapaNegocios.css
 │   │   ├── App.jsx
 │   │   └── main.jsx
 │   ├── index.html
@@ -123,15 +144,42 @@ conexion-local/
 │── README.md
 ```
 
+## Endpoints de la API
+
+### Autenticación
+
+| Método | Ruta            | Descripción         |
+| ------ | --------------- | ------------------- |
+| POST   | `/api/register` | Registro de usuario |
+| POST   | `/api/login`    | Inicio de sesión    |
+
+### Negocios
+
+| Método | Ruta                | Descripción               |
+| ------ | ------------------- | ------------------------- |
+| GET    | `/api/negocios`     | Listar todos los negocios |
+| GET    | `/api/negocios/:id` | Obtener un negocio por ID |
+| POST   | `/api/negocios`     | Crear un negocio          |
+| PUT    | `/api/negocios/:id` | Editar un negocio         |
+
+### Productos
+
+| Método | Ruta                 | Descripción                |
+| ------ | -------------------- | -------------------------- |
+| GET    | `/api/productos`     | Listar todos los productos |
+| GET    | `/api/productos/:id` | Obtener un producto por ID |
+| POST   | `/api/productos`     | Crear un producto          |
+| PUT    | `/api/productos/:id` | Editar un producto         |
+
 ---
 
 ## Instalación y ejecución
 
 ### Requisitos previos
 
-* Node.js (v18 o superior)
-* PostgreSQL
-* Docker (opcional)
+- Node.js (v18 o superior)
+- PostgreSQL
+- Docker (opcional)
 
 ### Pasos
 
@@ -183,11 +231,11 @@ http://localhost:5173
 
 El sistema implementa buenas prácticas de seguridad:
 
-* Autenticación basada en JWT
-* Encriptación de contraseñas con bcrypt
-* Validación de datos con Joi
-* Protección contra inyecciones SQL mediante Sequelize
-* Rate limiting en endpoints públicos
+- Autenticación basada en JWT
+- Encriptación de contraseñas con bcrypt
+- Validación de datos con Joi
+- Protección contra inyecciones SQL mediante Sequelize
+- Rate limiting en endpoints públicos
 
 ---
 
@@ -201,16 +249,16 @@ El desarrollo del proyecto se basa en la metodología ágil Scrum, organizada en
 
 El proyecto está diseñado para ser desplegado en plataformas como:
 
-* Render
-* Railway
+- Render
+- Railway
 
 ---
 
 ## Equipo de trabajo
 
-* Product Owner
-* Scrum Master
-* Equipo de desarrollo (Full Stack)
+- Product Owner
+- Scrum Master
+- Equipo de desarrollo (Full Stack)
 
 ---
 
