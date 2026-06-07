@@ -83,6 +83,7 @@ Desarrollar una aplicación web que permita a los micronegocios locales mejorar 
 - Vercel (despliegue frontend)
 - Render (despliegue backend)
 - Jest + Supertest (pruebas de integración)
+- Playwright (pruebas E2E)
 
 ---
 
@@ -148,8 +149,12 @@ conexion-local/
 │   │   │   └── MapaNegocios.css
 │   │   ├── App.jsx
 │   │   └── main.jsx
+│   ├── tests/
+│   │   └── e2e.spec.js
 │   ├── index.html
+│   ├── playwright.config.js
 │   ├── vite.config.js
+│   ├── .env.example
 │   └── package.json
 │
 │── README.md
@@ -244,6 +249,19 @@ npm install
 npm run dev
 ```
 
+5. (Opcional) Configurar variables de entorno para las pruebas E2E del frontend:
+
+```bash
+# Copiar la plantilla y completar con tus credenciales
+cp frontend/.env.example frontend/.env
+```
+
+```env
+PLAYWRIGHT_BASE_URL=https://conexion-local.vercel.app
+PLAYWRIGHT_USER_EMAIL=tu_correo@ejemplo.com
+PLAYWRIGHT_USER_PASSWORD=tu_password
+```
+
 5. Acceder a la aplicación:
 
 ```
@@ -267,6 +285,8 @@ La documentación permite explorar y probar todos los endpoints directamente des
 
 ## Pruebas
 
+### Pruebas de integración (Backend)
+
 El backend cuenta con pruebas de integración usando **Jest** y **Supertest**, que cubren los endpoints de autenticación, negocios y productos contra una base de datos real de prueba.
 
 Para ejecutar las pruebas localmente:
@@ -283,6 +303,31 @@ npm test -- --coverage
 ```
 
 Se requiere tener PostgreSQL corriendo y las variables de entorno configuradas. El umbral mínimo de cobertura de líneas es del 60 %.
+
+### Pruebas E2E (Frontend)
+
+El frontend cuenta con pruebas de extremo a extremo usando **Playwright**, que validan los flujos principales de la aplicación desplegada en Vercel:
+
+| ID | Prueba | Descripción |
+|----|--------|-------------|
+| PE-01 | Registro e inicio de sesión | Registra un usuario nuevo y verifica que puede hacer login |
+| PE-02 | Creación y búsqueda de negocio | Crea un negocio y comprueba que aparece en la búsqueda |
+| PE-03 | Gestión de disponibilidad de producto | Verifica que los badges de disponibilidad se muestran en la lista de productos |
+
+Para ejecutar las pruebas E2E:
+
+```bash
+cd frontend
+npx playwright test
+```
+
+Para ver el reporte HTML generado tras la ejecución:
+
+```bash
+npx playwright show-report
+```
+
+> Las credenciales de prueba se leen de `frontend/.env`. Copia `frontend/.env.example` y completa los valores antes de correr los tests. Los directorios `playwright-report/` y `test-results/` son generados automáticamente y están excluidos del repositorio.
 
 ---
 

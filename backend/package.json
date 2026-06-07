@@ -36,8 +36,14 @@
     },
     "jest": {
         "testEnvironment": "node",
+        "coverageReporters": [
+            "text"
+        ],
         "collectCoverageFrom": [
-            "src/**/*.js"
+            "src/**/*.js",
+            "!src/server.js",
+            "!src/swagger-server.js",
+            "!src/config/swagger.js"
         ],
         "coverageThreshold": {
             "global": {
