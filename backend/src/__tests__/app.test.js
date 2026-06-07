@@ -2,8 +2,22 @@ const request = require("supertest");
 const app = require("../app");
 const sequelize = require("../config/database");
 
+let token;
+
 beforeAll(async () => {
     await sequelize.sync({ force: true });
+
+    await request(app).post("/api/register").send({
+        nombre: "María Test",
+        correo: "maria@test.com",
+        password: "abc123",
+    });
+
+    const res = await request(app).post("/api/login").send({
+        correo: "maria@test.com",
+        password: "abc123",
+    });
+    token = res.body.token;
 });
 
 afterAll(async () => {
@@ -24,8 +38,8 @@ describe("GET /", () => {
 describe("POST /api/register", () => {
     test("registra un usuario nuevo exitosamente", async () => {
         const res = await request(app).post("/api/register").send({
-            nombre: "María Test",
-            correo: "maria@test.com",
+            nombre: "Usuario Nuevo",
+            correo: "nuevo@test.com",
             password: "abc123",
         });
         expect(res.statusCode).toBe(201);
@@ -87,11 +101,14 @@ describe("Negocios", () => {
     });
 
     test("POST /api/negocios crea un negocio con categoría", async () => {
-        const res = await request(app).post("/api/negocios").send({
-            nombre: "Tienda Test",
-            descripcion: "Negocio de prueba",
-            categoria: "Tecnología",
-        });
+        const res = await request(app)
+            .post("/api/negocios")
+            .set("Authorization", `Bearer ${token}`)
+            .send({
+                nombre: "Tienda Test",
+                descripcion: "Negocio de prueba",
+                categoria: "Tecnología",
+            });
         expect(res.statusCode).toBe(200);
         expect(res.body.negocio).toBeDefined();
         expect(res.body.negocio.categoria).toBe("Tecnología");
@@ -112,10 +129,10 @@ describe("Negocios", () => {
     });
 
     test("GET /api/negocios/:id retorna el negocio", async () => {
-        const created = await request(app).post("/api/negocios").send({
-            nombre: "Negocio ID Test",
-            descripcion: "desc",
-        });
+        const created = await request(app)
+            .post("/api/negocios")
+            .set("Authorization", `Bearer ${token}`)
+            .send({ nombre: "Negocio ID Test", descripcion: "desc" });
         const id = created.body.negocio.id;
         const res = await request(app).get(`/api/negocios/${id}`);
         expect(res.statusCode).toBe(200);
@@ -134,10 +151,10 @@ describe("Productos", () => {
     let negocioId;
 
     beforeAll(async () => {
-        const res = await request(app).post("/api/negocios").send({
-            nombre: "Negocio para Productos",
-            descripcion: "test",
-        });
+        const res = await request(app)
+            .post("/api/negocios")
+            .set("Authorization", `Bearer ${token}`)
+            .send({ nombre: "Negocio para Productos", descripcion: "test" });
         negocioId = res.body.negocio.id;
     });
 
@@ -148,41 +165,33 @@ describe("Productos", () => {
     });
 
     test("POST /api/productos crea un producto disponible", async () => {
-        const res = await request(app).post("/api/productos").send({
-            nombre: "Café orgánico",
-            precio: 15000,
-            negocioId,
-            disponible: true,
-        });
+        const res = await request(app)
+            .post("/api/productos")
+            .set("Authorization", `Bearer ${token}`)
+            .send({ nombre: "Café orgánico", precio: 15000, negocioId, disponible: true });
         expect(res.statusCode).toBe(200);
         expect(res.body.producto.disponible).toBe(true);
     });
 
     test("POST /api/productos crea un producto agotado", async () => {
-        const res = await request(app).post("/api/productos").send({
-            nombre: "Producto agotado",
-            precio: 8000,
-            negocioId,
-            disponible: false,
-        });
+        const res = await request(app)
+            .post("/api/productos")
+            .set("Authorization", `Bearer ${token}`)
+            .send({ nombre: "Producto agotado", precio: 8000, negocioId, disponible: false });
         expect(res.statusCode).toBe(200);
         expect(res.body.producto.disponible).toBe(false);
     });
 
     test("PUT /api/productos/:id actualiza disponibilidad", async () => {
-        const created = await request(app).post("/api/productos").send({
-            nombre: "Producto editable",
-            precio: 3000,
-            negocioId,
-            disponible: true,
-        });
+        const created = await request(app)
+            .post("/api/productos")
+            .set("Authorization", `Bearer ${token}`)
+            .send({ nombre: "Producto editable", precio: 3000, negocioId, disponible: true });
         const id = created.body.producto.id;
-        const res = await request(app).put(`/api/productos/${id}`).send({
-            nombre: "Producto editable",
-            precio: 3000,
-            negocioId,
-            disponible: false,
-        });
+        const res = await request(app)
+            .put(`/api/productos/${id}`)
+            .set("Authorization", `Bearer ${token}`)
+            .send({ nombre: "Producto editable", precio: 3000, negocioId, disponible: false });
         expect(res.statusCode).toBe(200);
         expect(res.body.producto.disponible).toBe(false);
     });
