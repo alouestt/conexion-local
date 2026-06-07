@@ -187,7 +187,19 @@ conexion-local/
 
 - Node.js (v18 o superior)
 - PostgreSQL
-- Docker (opcional)
+- Docker (opcional, para ejecución con contenedores)
+
+### Opción A — Ejecución con Docker
+
+Con Docker y Docker Compose instalados, levanta los tres servicios (PostgreSQL, backend y frontend) con un solo comando desde la raíz del proyecto:
+
+```bash
+docker-compose up --build
+```
+
+La aplicación quedará disponible en `http://localhost:5173`.
+
+### Opción B — Ejecución local (sin Docker)
 
 ### Pasos
 
