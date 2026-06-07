@@ -63,6 +63,7 @@ Desarrollar una aplicación web que permita a los micronegocios locales mejorar 
 - Sequelize ORM
 - JWT (autenticación)
 - Bcrypt (encriptación de contraseñas)
+- Swagger UI Express + swagger-jsdoc (documentación de API)
 
 ### Frontend
 
@@ -94,7 +95,8 @@ conexion-local/
 │   │   ├── __tests__/
 │   │   │   └── app.test.js
 │   │   ├── config/
-│   │   │   └── database.js
+│   │   │   ├── database.js
+│   │   │   └── swagger.js
 │   │   ├── controllers/
 │   │   │   ├── authController.js
 │   │   │   ├── negocioController.js
@@ -110,6 +112,7 @@ conexion-local/
 │   │   │   ├── negocioRoutes.js
 │   │   │   └── productoRoutes.js
 │   │   ├── app.js
+│   │   ├── swagger-server.js
 │   │   └── server.js
 │   ├── .env
 │   └── package.json
@@ -246,6 +249,19 @@ npm run dev
 ```
 http://localhost:5173
 ```
+
+---
+
+## Documentación de la API
+
+La API cuenta con documentación interactiva generada con **Swagger UI**. En entorno de desarrollo, al iniciar el backend se levantan dos servidores:
+
+- **API REST**: `http://localhost:3000`
+- **Swagger UI**: `http://localhost:3001`
+
+La documentación permite explorar y probar todos los endpoints directamente desde el navegador. Los endpoints protegidos requieren ingresar el token JWT mediante el botón **Authorize**.
+
+> En producción (Render) el servidor Swagger no se levanta; la documentación solo está disponible en desarrollo.
 
 ---
 
