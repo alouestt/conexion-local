@@ -1,47 +1,46 @@
 version: "3.8"
 
 services:
+    # ── Base de datos PostgreSQL ────────────────────────────────────────────────
+    postgres:
+        image: postgres:15
+        environment:
+            POSTGRES_DB: conexion_local
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+        ports:
+            - "5432:5432"
+        volumes:
+            - pg_data:/var/lib/postgresql/data # persiste los datos entre reinicios
+        healthcheck:
+            test: ["CMD-SHELL", "pg_isready -U postgres"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
 
-  # ── Base de datos PostgreSQL ────────────────────────────────────────────────
-  postgres:
-    image: postgres:15
-    environment:
-      POSTGRES_DB: conexion_local
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-      - "5432:5432"
-    volumes:
-      - pg_data:/var/lib/postgresql/data   # persiste los datos entre reinicios
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+    # ── Backend Express ─────────────────────────────────────────────────────────
+    backend:
+        build: ./backend
+        ports:
+            - "3000:3000"
+        environment:
+            DB_NAME: conexion_local
+            DB_USER: postgres
+            DB_PASSWORD: postgres
+            DB_HOST: postgres # nombre del servicio en la red de Docker
+            DB_DIALECT: postgres
+            JWT_SECRET: conexionlocal_secret_docker
+        depends_on:
+            postgres:
+                condition: service_healthy # espera a que postgres esté listo
 
-  # ── Backend Express ─────────────────────────────────────────────────────────
-  backend:
-    build: ./backend
-    ports:
-      - "3000:3000"
-    environment:
-      DB_NAME: conexion_local
-      DB_USER: postgres
-      DB_PASSWORD: postgres
-      DB_HOST: postgres          # nombre del servicio en la red de Docker
-      DB_DIALECT: postgres
-      JWT_SECRET: conexionlocal_secret_docker
-    depends_on:
-      postgres:
-        condition: service_healthy  # espera a que postgres esté listo
-
-  # ── Frontend React (nginx) ──────────────────────────────────────────────────
-  frontend:
-    build: ./frontend
-    ports:
-      - "5173:80"      # accesible en http://localhost:5173
-    depends_on:
-      - backend
+    # ── Frontend React (nginx) ──────────────────────────────────────────────────
+    frontend:
+        build: ./frontend
+        ports:
+            - "5173:80" # accesible en http://localhost:5173
+        depends_on:
+            - backend
 
 volumes:
-  pg_data:
+    pg_data:
