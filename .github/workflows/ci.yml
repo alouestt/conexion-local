@@ -1,74 +1,81 @@
 name: CI/CD ConexiónLocal
 
 on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
 
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+    backend:
+        name: Backend — Lint, Test & Build
+        runs-on: ubuntu-latest
 
-    services:
-      postgres:
-        image: postgres:15
+        services:
+            postgres:
+                image: postgres:15
+                env:
+                    POSTGRES_USER: postgres
+                    POSTGRES_PASSWORD: postgres
+                    POSTGRES_DB: conexion_local_test
+                ports:
+                    - 5432:5432
+                options: >-
+                    --health-cmd pg_isready
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+
         env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: conexion_local_test
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
+            DB_NAME: conexion_local_test
+            DB_USER: postgres
+            DB_PASSWORD: postgres
+            DB_HOST: localhost
+            DB_DIALECT: postgres
+            JWT_SECRET: secret_test_ci
 
-    steps:
-      - name: Checkout código
-        uses: actions/checkout@v4
+        steps:
+            - name: Checkout código
+              uses: actions/checkout@v4
 
-      - name: Configurar Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 18
-          cache: npm
-          cache-dependency-path: backend/package-lock.json
+            - name: Configurar Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 18
 
-      - name: Instalar dependencias del backend
-        run: |
-          cd backend
-          npm install
+            - name: Instalar dependencias del backend
+              working-directory: backend
+              run: npm install
 
-      - name: Ejecutar lint del backend
-        run: |
-          cd backend
-          npm run lint
+            - name: Lint del backend
+              working-directory: backend
+              run: npm run lint
 
-      - name: Ejecutar pruebas del backend
-        env:
-          DB_NAME: conexion_local_test
-          DB_USER: postgres
-          DB_PASSWORD: postgres
-          DB_HOST: localhost
-          DB_DIALECT: postgres
-          JWT_SECRET: secret_test
-        run: |
-          cd backend
-          npm test -- --coverage
+            - name: Pruebas del backend con cobertura
+              working-directory: backend
+              run: npm test -- --coverage
 
-      - name: Instalar dependencias del frontend
-        run: |
-          cd frontend
-          npm install
+    frontend:
+        name: Frontend — Lint & Build
+        runs-on: ubuntu-latest
 
-      - name: Ejecutar lint del frontend
-        run: |
-          cd frontend
-          npm run lint
+        steps:
+            - name: Checkout código
+              uses: actions/checkout@v4
 
-      - name: Build del frontend
-        run: |
-          cd frontend
-          npm run build
+            - name: Configurar Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 18
+
+            - name: Instalar dependencias del frontend
+              working-directory: frontend
+              run: npm install
+
+            - name: Lint del frontend
+              working-directory: frontend
+              run: npm run lint
+
+            - name: Build del frontend
+              working-directory: frontend
+              run: npm run build

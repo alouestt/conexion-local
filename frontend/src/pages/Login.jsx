@@ -21,7 +21,7 @@ export default function Login() {
         setLoading(true);
         try {
             const { data } = await authService.login(form);
-            login(data.user);
+            login(data.usuario);
             navigate("/dashboard");
         } catch (err) {
             setError(err.response?.data?.error || "Error al iniciar sesión");

@@ -74,11 +74,12 @@ Desarrollar una aplicación web que permita a los micronegocios locales mejorar 
 ### Herramientas y servicios
 
 - Docker
-- GitHub
+- GitHub / GitHub Actions (CI/CD)
 - Postman
 - Figma
 - Cloudinary
 - Render / Railway (despliegue)
+- Jest + Supertest (pruebas de integración)
 
 ---
 
@@ -88,6 +89,8 @@ Desarrollar una aplicación web que permita a los micronegocios locales mejorar 
 conexion-local/
 │── backend/
 │   ├── src/
+│   │   ├── __tests__/
+│   │   │   └── app.test.js
 │   │   ├── config/
 │   │   │   └── database.js
 │   │   ├── controllers/
@@ -202,6 +205,7 @@ DB_USER=postgres
 DB_PASSWORD=tu_contraseña
 DB_HOST=localhost
 DB_DIALECT=postgres
+JWT_SECRET=tu_clave_secreta
 ```
 
 3. Instalar dependencias e iniciar el backend:
@@ -227,6 +231,38 @@ npm run dev
 ```
 http://localhost:5173
 ```
+
+---
+
+## Pruebas
+
+El backend cuenta con pruebas de integración usando **Jest** y **Supertest**, que cubren los endpoints de autenticación, negocios y productos contra una base de datos real de prueba.
+
+Para ejecutar las pruebas localmente:
+
+```bash
+cd backend
+npm test
+```
+
+Para ejecutar con reporte de cobertura:
+
+```bash
+npm test -- --coverage
+```
+
+Se requiere tener PostgreSQL corriendo y las variables de entorno configuradas. El umbral mínimo de cobertura de líneas es del 60 %.
+
+---
+
+## CI/CD
+
+El proyecto usa **GitHub Actions** para integración y entrega continua. El pipeline se activa en cada push o pull request a la rama `main` y ejecuta dos jobs en paralelo:
+
+- **Backend**: instala dependencias, ejecuta ESLint y corre las pruebas con cobertura (requiere un servicio PostgreSQL).
+- **Frontend**: instala dependencias, ejecuta ESLint y genera el build de producción.
+
+El archivo de configuración se encuentra en [`.github/workflows/ci.yml`](.github/workflows/ci.yml).
 
 ---
 
