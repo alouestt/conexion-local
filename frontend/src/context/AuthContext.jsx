@@ -22,18 +22,21 @@ export function AuthProvider({ children }) {
     });
 
     /**
-     * Guarda el usuario en el estado y en localStorage para sobrevivir recargas.
+     * Guarda el usuario y el token en el estado y en localStorage para sobrevivir recargas.
      * @param {object} userData - Objeto con id, nombre, correo y rol del usuario.
+     * @param {string} [token]  - Token JWT retornado por el backend al iniciar sesión.
      */
-    const login = (userData) => {
+    const login = (userData, token) => {
         setUser(userData);
         localStorage.setItem("cl_user", JSON.stringify(userData));
+        if (token) localStorage.setItem("cl_token", token);
     };
 
     /** Limpia el estado y elimina la sesión guardada. */
     const logout = () => {
         setUser(null);
         localStorage.removeItem("cl_user");
+        localStorage.removeItem("cl_token");
     };
 
     return (

@@ -1,11 +1,18 @@
 // Cliente HTTP centralizado usando Axios.
-// baseURL "/api" funciona gracias al proxy configurado en vite.config.js,
-// que redirige las peticiones a http://localhost:3000 durante el desarrollo.
+// En producción usa VITE_API_URL (backend en Render); en desarrollo cae a "/api",
+// que el proxy de vite.config.js redirige a http://localhost:3000.
+// El interceptor adjunta automáticamente el token JWT en cada petición protegida.
 import axios from "axios";
 
 const api = axios.create({
     baseURL: import.meta.env.VITE_API_URL || "/api",
     headers: { "Content-Type": "application/json" },
+});
+
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem("cl_token");
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
 });
 
 /** Servicios de autenticación */

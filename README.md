@@ -79,8 +79,8 @@ Desarrollar una aplicación web que permita a los micronegocios locales mejorar 
 - GitHub / GitHub Actions (CI/CD)
 - Postman
 - Figma
-- Cloudinary
-- Render / Railway (despliegue)
+- Vercel (despliegue frontend)
+- Render (despliegue backend)
 - Jest + Supertest (pruebas de integración)
 
 ---
@@ -99,6 +99,8 @@ conexion-local/
 │   │   │   ├── authController.js
 │   │   │   ├── negocioController.js
 │   │   │   └── productoController.js
+│   │   ├── middleware/
+│   │   │   └── auth.js
 │   │   ├── models/
 │   │   │   ├── User.js
 │   │   │   ├── Negocio.js
@@ -107,7 +109,6 @@ conexion-local/
 │   │   │   ├── authRoutes.js
 │   │   │   ├── negocioRoutes.js
 │   │   │   └── productoRoutes.js
-│   │   ├── services/
 │   │   ├── app.js
 │   │   └── server.js
 │   ├── .env
@@ -284,11 +285,10 @@ El archivo de configuración se encuentra en [`.github/workflows/ci.yml`](.githu
 
 El sistema implementa buenas prácticas de seguridad:
 
-- Autenticación basada en JWT
+- Autenticación basada en JWT (token almacenado en `localStorage` y enviado en cada petición mediante un interceptor de Axios)
 - Encriptación de contraseñas con bcrypt
-- Validación de datos con Joi
-- Protección contra inyecciones SQL mediante Sequelize
-- Rate limiting en endpoints públicos
+- Protección contra inyecciones SQL mediante Sequelize ORM
+- Rutas protegidas en backend (middleware `verificarToken`) y en frontend (`ProtectedRoute`)
 
 ---
 
@@ -300,10 +300,10 @@ El desarrollo del proyecto se basa en la metodología ágil Scrum, organizada en
 
 ## Despliegue
 
-El proyecto está diseñado para ser desplegado en plataformas como:
+El proyecto está desplegado en:
 
-- Render
-- Railway
+- **Frontend**: [Vercel](https://conexion-local.vercel.app)
+- **Backend**: Render (`https://conexionlocal-backend.onrender.com`)
 
 ---
 

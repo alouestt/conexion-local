@@ -24,9 +24,10 @@ export default function Login() {
         setLoading(true);
         try {
             const { data } = await authService.login(form);
-            // El backend retorna { token, usuario: { id, nombre, correo, rol } }
-            // Se guarda "usuario" (no "user") en el contexto de autenticación
-            login(data.usuario);
+            // El backend retorna { token, usuario: { id, nombre, correo, rol } }.
+            // Se pasan ambos al contexto: usuario queda en estado/localStorage
+            // y token se persiste en cl_token para que el interceptor de axios lo use.
+            login(data.usuario, data.token);
             navigate("/dashboard");
         } catch (err) {
             setError(err.response?.data?.error || "Error al iniciar sesión");
