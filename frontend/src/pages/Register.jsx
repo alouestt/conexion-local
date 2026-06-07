@@ -1,3 +1,5 @@
+// Página de registro de nuevos usuarios.
+// Tras registrarse exitosamente, redirige al login para que el usuario inicie sesión.
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authService } from "../services/api";
@@ -19,7 +21,7 @@ export default function Register() {
         setLoading(true);
         try {
             await authService.register(form);
-            navigate("/login");
+            navigate("/login"); // el registro no inicia sesión automáticamente
         } catch (err) {
             setError(err.response?.data?.error || "Error al registrar usuario");
         } finally {

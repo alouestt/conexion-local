@@ -1,22 +1,24 @@
+// Página para editar un negocio existente.
+// Carga los datos actuales del negocio al montar el componente y los precarga en el formulario.
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { negocioService } from "../services/api";
 import "../styles/pages.css";
 
-export default function EditarNegocio() {
-    const { id } = useParams();
-    const navigate = useNavigate();
-    const CATEGORIAS = [
-        "Alimentos y bebidas",
-        "Ropa y accesorios",
-        "Artesanías",
-        "Servicios",
-        "Tecnología",
-        "Salud y belleza",
-        "Hogar y jardín",
-        "Otro",
-    ];
+const CATEGORIAS = [
+    "Alimentos y bebidas",
+    "Ropa y accesorios",
+    "Artesanías",
+    "Servicios",
+    "Tecnología",
+    "Salud y belleza",
+    "Hogar y jardín",
+    "Otro",
+];
 
+export default function EditarNegocio() {
+    const { id } = useParams(); // ID del negocio obtenido desde la URL (/negocios/:id/editar)
+    const navigate = useNavigate();
     const [form, setForm] = useState({
         nombre: "",
         descripcion: "",
@@ -25,16 +27,17 @@ export default function EditarNegocio() {
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
-    const [cargando, setCargando] = useState(true);
+    const [cargando, setCargando] = useState(true); // estado de carga inicial del negocio
 
     useEffect(() => {
+        // Obtiene los datos actuales del negocio para precargar el formulario
         negocioService
             .getById(id)
             .then(({ data }) =>
                 setForm({
                     nombre: data.nombre,
                     descripcion: data.descripcion || "",
-                    categoria: data.categoria || "",
+                    categoria: data.categoria || "", // puede venir null desde la BD
                 }),
             )
             .catch(() => setError("No se pudo cargar el negocio"))
@@ -63,6 +66,7 @@ export default function EditarNegocio() {
         }
     };
 
+    // Muestra un estado de carga mientras se obtienen los datos del negocio
     if (cargando)
         return (
             <div className="form-page">

@@ -1,3 +1,5 @@
+// Página para agregar un nuevo producto.
+// Carga la lista de negocios al montar para poblar el selector de negocio.
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { productoService, negocioService } from "../services/api";
@@ -9,7 +11,7 @@ export default function CrearProducto() {
         nombre: "",
         precio: "",
         negocioId: "",
-        disponible: true,
+        disponible: true, // los productos se crean como disponibles por defecto
     });
     const [negocios, setNegocios] = useState([]);
     const [error, setError] = useState("");
@@ -17,6 +19,7 @@ export default function CrearProducto() {
     const [loading, setLoading] = useState(false);
 
     useEffect(() => {
+        // Carga todos los negocios para que el usuario pueda seleccionar a cuál pertenece
         negocioService
             .getAll()
             .then(({ data }) => setNegocios(data))
@@ -24,6 +27,7 @@ export default function CrearProducto() {
     }, []);
 
     const handleChange = (e) => {
+        // Los checkboxes usan e.target.checked en lugar de e.target.value
         const value =
             e.target.type === "checkbox" ? e.target.checked : e.target.value;
         setForm({ ...form, [e.target.name]: value });
@@ -37,8 +41,8 @@ export default function CrearProducto() {
         try {
             const payload = {
                 nombre: form.nombre,
-                precio: parseFloat(form.precio),
-                negocioId: parseInt(form.negocioId),
+                precio: parseFloat(form.precio), // convierte string a número
+                negocioId: parseInt(form.negocioId), // convierte string a entero
                 disponible: form.disponible,
             };
             const { data } = await productoService.crear(payload);

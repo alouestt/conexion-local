@@ -168,7 +168,12 @@ describe("Productos", () => {
         const res = await request(app)
             .post("/api/productos")
             .set("Authorization", `Bearer ${token}`)
-            .send({ nombre: "Café orgánico", precio: 15000, negocioId, disponible: true });
+            .send({
+                nombre: "Café orgánico",
+                precio: 15000,
+                negocioId,
+                disponible: true,
+            });
         expect(res.statusCode).toBe(200);
         expect(res.body.producto.disponible).toBe(true);
     });
@@ -177,7 +182,12 @@ describe("Productos", () => {
         const res = await request(app)
             .post("/api/productos")
             .set("Authorization", `Bearer ${token}`)
-            .send({ nombre: "Producto agotado", precio: 8000, negocioId, disponible: false });
+            .send({
+                nombre: "Producto agotado",
+                precio: 8000,
+                negocioId,
+                disponible: false,
+            });
         expect(res.statusCode).toBe(200);
         expect(res.body.producto.disponible).toBe(false);
     });
@@ -186,12 +196,22 @@ describe("Productos", () => {
         const created = await request(app)
             .post("/api/productos")
             .set("Authorization", `Bearer ${token}`)
-            .send({ nombre: "Producto editable", precio: 3000, negocioId, disponible: true });
+            .send({
+                nombre: "Producto editable",
+                precio: 3000,
+                negocioId,
+                disponible: true,
+            });
         const id = created.body.producto.id;
         const res = await request(app)
             .put(`/api/productos/${id}`)
             .set("Authorization", `Bearer ${token}`)
-            .send({ nombre: "Producto editable", precio: 3000, negocioId, disponible: false });
+            .send({
+                nombre: "Producto editable",
+                precio: 3000,
+                negocioId,
+                disponible: false,
+            });
         expect(res.statusCode).toBe(200);
         expect(res.body.producto.disponible).toBe(false);
     });

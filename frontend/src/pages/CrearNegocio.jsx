@@ -1,21 +1,25 @@
+// Página para registrar un nuevo negocio.
+// Solo accesible para usuarios autenticados (ruta protegida en App.jsx).
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { negocioService } from "../services/api";
 import "../styles/pages.css";
 
+// Lista de categorías disponibles; se mantiene en el cliente para evitar
+// una petición extra al servidor (no existe tabla de categorías en BD).
+const CATEGORIAS = [
+    "Alimentos y bebidas",
+    "Ropa y accesorios",
+    "Artesanías",
+    "Servicios",
+    "Tecnología",
+    "Salud y belleza",
+    "Hogar y jardín",
+    "Otro",
+];
+
 export default function CrearNegocio() {
     const navigate = useNavigate();
-    const CATEGORIAS = [
-        "Alimentos y bebidas",
-        "Ropa y accesorios",
-        "Artesanías",
-        "Servicios",
-        "Tecnología",
-        "Salud y belleza",
-        "Hogar y jardín",
-        "Otro",
-    ];
-
     const [form, setForm] = useState({
         nombre: "",
         descripcion: "",
@@ -40,6 +44,7 @@ export default function CrearNegocio() {
                 `¡Negocio "${data.negocio.nombre}" creado exitosamente!`,
             );
             setForm({ nombre: "", descripcion: "", categoria: "" });
+            // Redirige después de 1.5 s para que el usuario pueda leer el mensaje de éxito
             setTimeout(() => navigate("/negocios"), 1500);
         } catch (err) {
             setError(err.response?.data?.error || "Error al crear el negocio");

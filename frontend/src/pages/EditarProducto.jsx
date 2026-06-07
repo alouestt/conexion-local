@@ -1,10 +1,12 @@
+// Página para editar un producto existente.
+// Carga en paralelo el producto y la lista de negocios para minimizar el tiempo de espera.
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { productoService, negocioService } from "../services/api";
 import "../styles/pages.css";
 
 export default function EditarProducto() {
-    const { id } = useParams();
+    const { id } = useParams(); // ID del producto obtenido desde la URL (/productos/:id/editar)
     const navigate = useNavigate();
     const [form, setForm] = useState({
         nombre: "",
@@ -19,12 +21,15 @@ export default function EditarProducto() {
     const [cargando, setCargando] = useState(true);
 
     useEffect(() => {
+        // Promise.all ejecuta ambas peticiones en paralelo: carga el producto
+        // y la lista de negocios al mismo tiempo en lugar de hacerlo secuencialmente
         Promise.all([productoService.getById(id), negocioService.getAll()])
             .then(([{ data: producto }, { data: negs }]) => {
                 setForm({
                     nombre: producto.nombre,
                     precio: producto.precio,
                     negocioId: producto.negocioId,
+                    // disponible !== false cubre el caso en que llegue null desde la BD
                     disponible: producto.disponible !== false,
                 });
                 setNegocios(negs);
@@ -34,6 +39,7 @@ export default function EditarProducto() {
     }, [id]);
 
     const handleChange = (e) => {
+        // Los checkboxes usan e.target.checked en lugar de e.target.value
         const value =
             e.target.type === "checkbox" ? e.target.checked : e.target.value;
         setForm({ ...form, [e.target.name]: value });
@@ -63,6 +69,7 @@ export default function EditarProducto() {
         }
     };
 
+    // Muestra pantalla de carga mientras se obtienen los datos iniciales
     if (cargando)
         return (
             <div className="form-page">

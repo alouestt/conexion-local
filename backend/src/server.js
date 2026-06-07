@@ -1,10 +1,11 @@
-// Punto de entrada del servidor: sincroniza la BD y luego levanta Express
+// Punto de entrada del servidor: sincroniza la base de datos y levanta Express.
 const app = require("./app");
 const sequelize = require("./config/database");
 
 const PORT = 3000;
 
-// sequelize.sync() crea las tablas si no existen antes de aceptar peticiones
+// sync({ alter: true }) añade columnas nuevas a tablas existentes sin borrar datos.
+// Se usa en desarrollo; en producción se reemplazaría por migraciones.
 sequelize
     .sync({ alter: true })
     .then(() => {

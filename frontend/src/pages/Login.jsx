@@ -1,3 +1,6 @@
+// Página de inicio de sesión.
+// Al autenticarse correctamente, guarda el usuario en el contexto y
+// redirige al dashboard.
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { authService } from "../services/api";
@@ -21,6 +24,8 @@ export default function Login() {
         setLoading(true);
         try {
             const { data } = await authService.login(form);
+            // El backend retorna { token, usuario: { id, nombre, correo, rol } }
+            // Se guarda "usuario" (no "user") en el contexto de autenticación
             login(data.usuario);
             navigate("/dashboard");
         } catch (err) {

@@ -1,3 +1,6 @@
+// Página de listado de productos.
+// Accesible públicamente; muestra disponibilidad con badges visuales.
+// Los usuarios autenticados ven el botón de creación y la columna de edición.
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { productoService } from "../services/api";
@@ -17,8 +20,12 @@ export default function Productos() {
             .then(({ data }) => setProductos(data))
             .catch(() => setError("No se pudieron cargar los productos"))
             .finally(() => setLoading(false));
-    }, []);
+    }, []); // arreglo vacío: se ejecuta solo al montar el componente
 
+    /**
+     * Formatea un número como precio en pesos colombianos (COP).
+     * Ejemplo: 15000 → "$15.000"
+     */
     const formatPrecio = (precio) =>
         new Intl.NumberFormat("es-CO", {
             style: "currency",
@@ -33,6 +40,7 @@ export default function Productos() {
                     <h1>Productos</h1>
                     <p>Listado de todos los productos publicados</p>
                 </div>
+                {/* Solo usuarios autenticados pueden agregar productos */}
                 {user && (
                     <Link to="/productos/nuevo" className="btn btn-primary">
                         + Nuevo producto
@@ -64,6 +72,7 @@ export default function Productos() {
                                 <th>Precio</th>
                                 <th>Negocio</th>
                                 <th>Disponibilidad</th>
+                                {/* Columna de acciones solo para usuarios autenticados */}
                                 {user && <th>Acciones</th>}
                             </tr>
                         </thead>
@@ -76,6 +85,7 @@ export default function Productos() {
                                         {formatPrecio(p.precio)}
                                     </td>
                                     <td>
+                                        {/* p.Negocio viene del include de Sequelize */}
                                         {p.Negocio ? (
                                             <span className="negocio-tag">
                                                 {p.Negocio.nombre}
@@ -85,6 +95,8 @@ export default function Productos() {
                                         )}
                                     </td>
                                     <td>
+                                        {/* Comparación estricta con false para manejar
+                                            el caso en que disponible sea null o undefined */}
                                         {p.disponible === false ? (
                                             <span className="badge-agotado">
                                                 Agotado
@@ -112,6 +124,7 @@ export default function Productos() {
                 </div>
             )}
 
+            {/* Invitación a registrarse visible solo para visitantes anónimos */}
             {!user && (
                 <p className="lista-nota">
                     ¿Eres vendedor?{" "}
