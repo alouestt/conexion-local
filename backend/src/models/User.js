@@ -1,4 +1,5 @@
-// Modelo de usuario: representa la tabla Users en la base de datos
+// Modelo User: representa la tabla "Users" en la base de datos.
+// Almacena las cuentas de usuario con su rol dentro del sistema.
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
@@ -9,17 +10,17 @@ const User = sequelize.define("User", {
     },
     correo: {
         type: DataTypes.STRING,
-        unique: true,
+        unique: true, // restricción de unicidad a nivel de BD
         allowNull: false,
     },
     password: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false, // se almacena el hash generado por bcrypt, nunca el texto plano
     },
     rol: {
         type: DataTypes.ENUM("comprador", "vendedor", "admin"),
         allowNull: false,
-        defaultValue: "comprador",
+        defaultValue: "comprador", // todo usuario nuevo es comprador por defecto
     },
 });
 

@@ -1,7 +1,10 @@
+// Panel principal del usuario autenticado.
+// Muestra un saludo personalizado y accesos directos a las secciones principales.
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "../styles/Dashboard.css";
 
+// Acciones disponibles desde el panel; se renderizan como tarjetas de navegación
 const ACCIONES = [
     {
         icono: "🏪",
@@ -33,12 +36,15 @@ export default function Dashboard() {
         <div className="dashboard">
             <div className="dashboard-header">
                 <div className="container">
+                    {/* user?.nombre usa optional chaining porque el contexto
+                        puede tardar un ciclo en hidratarse desde localStorage */}
                     <h1>¡Hola, {user?.nombre}! 👋</h1>
                     <p>Bienvenido a tu panel de ConexiónLocal</p>
                 </div>
             </div>
 
             <div className="container dashboard-body">
+                {/* Tarjeta de información del usuario */}
                 <div className="user-info-card card">
                     <div className="user-avatar">
                         {user?.nombre?.charAt(0).toUpperCase()}

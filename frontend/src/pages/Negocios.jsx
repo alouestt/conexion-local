@@ -1,9 +1,13 @@
+// Página de listado de negocios.
+// Permite a cualquier visitante explorar el catálogo con filtros en tiempo real.
+// Los usuarios autenticados ven además los botones de gestión (crear, editar).
 import { useState, useEffect, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { negocioService } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 import "../styles/lista.css";
 
+// Categorías disponibles para filtrar. Deben coincidir con las del formulario de creación.
 const CATEGORIAS = [
     "Alimentos y bebidas",
     "Ropa y accesorios",
@@ -24,6 +28,8 @@ export default function Negocios() {
     const [busqueda, setBusqueda] = useState("");
     const [categoriaFiltro, setCategoriaFiltro] = useState("");
 
+    // useCallback memoiza la función para que useEffect pueda usarla como
+    // dependencia sin recrearla en cada render
     const cargarNegocios = useCallback(() => {
         setLoading(true);
         const params = {};
@@ -37,8 +43,10 @@ export default function Negocios() {
     }, [busqueda, categoriaFiltro]);
 
     useEffect(() => {
+        // Debounce de 300 ms: espera a que el usuario deje de escribir antes
+        // de enviar la petición al backend, evitando llamadas en cada tecla
         const timer = setTimeout(cargarNegocios, 300);
-        return () => clearTimeout(timer);
+        return () => clearTimeout(timer); // limpia el timer si el efecto se re-ejecuta
     }, [cargarNegocios]);
 
     return (
@@ -48,6 +56,7 @@ export default function Negocios() {
                     <h1>Negocios</h1>
                     <p>Listado de todos los negocios registrados</p>
                 </div>
+                {/* Solo usuarios autenticados pueden crear negocios */}
                 {user && (
                     <Link to="/negocios/nuevo" className="btn btn-primary">
                         + Nuevo negocio
@@ -55,6 +64,7 @@ export default function Negocios() {
                 )}
             </div>
 
+            {/* Barra de filtros: búsqueda por texto y por categoría */}
             <div className="lista-filtros">
                 <input
                     type="text"
@@ -75,6 +85,7 @@ export default function Negocios() {
                         </option>
                     ))}
                 </select>
+                {/* Botón "Limpiar" visible solo si hay algún filtro activo */}
                 {(busqueda || categoriaFiltro) && (
                     <button
                         className="btn btn-secondary"
@@ -116,6 +127,7 @@ export default function Negocios() {
                                 <th>Categoría</th>
                                 <th>Descripción</th>
                                 <th>Productos</th>
+                                {/* Columna de acciones visible solo para usuarios autenticados */}
                                 {user && <th>Acciones</th>}
                             </tr>
                         </thead>
@@ -139,6 +151,7 @@ export default function Negocios() {
                                         )}
                                     </td>
                                     <td className="td-badge">
+                                        {/* n.Productos viene del include de Sequelize */}
                                         <span className="badge">
                                             {n.Productos?.length ?? 0}
                                         </span>
@@ -160,6 +173,7 @@ export default function Negocios() {
                 </div>
             )}
 
+            {/* Invitación a registrarse visible solo para visitantes anónimos */}
             {!user && (
                 <p className="lista-nota">
                     ¿Eres vendedor?{" "}

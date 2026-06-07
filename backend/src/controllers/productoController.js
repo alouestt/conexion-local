@@ -1,7 +1,11 @@
+// Controlador de productos: operaciones CRUD vinculadas a un Negocio.
 const Producto = require("../models/Producto");
 const Negocio = require("../models/Negocio");
 
-// GET /api/productos
+/**
+ * GET /api/productos
+ * Retorna todos los productos. Incluye el negocio al que pertenece cada uno.
+ */
 exports.obtenerProductos = async (req, res) => {
     try {
         const productos = await Producto.findAll({ include: Negocio });
@@ -11,7 +15,11 @@ exports.obtenerProductos = async (req, res) => {
     }
 };
 
-// GET /api/productos/:id
+/**
+ * GET /api/productos/:id
+ * Retorna un producto por su ID incluyendo el negocio asociado.
+ * Retorna 404 si no existe.
+ */
 exports.obtenerProducto = async (req, res) => {
     try {
         const producto = await Producto.findByPk(req.params.id, {
@@ -25,7 +33,11 @@ exports.obtenerProducto = async (req, res) => {
     }
 };
 
-// POST /api/productos
+/**
+ * POST /api/productos
+ * Crea un nuevo producto. Requiere autenticación (middleware verificarToken).
+ * Campos: nombre, precio, negocioId (obligatorios), disponible (por defecto true).
+ */
 exports.crearProducto = async (req, res) => {
     try {
         const { nombre, precio, negocioId, disponible } = req.body;
@@ -33,6 +45,7 @@ exports.crearProducto = async (req, res) => {
             nombre,
             precio,
             negocioId,
+            // Si el cliente no envía disponible, se asume true (producto en stock)
             disponible: disponible !== undefined ? disponible : true,
         });
         res.json({ message: "Producto creado", producto });
@@ -41,7 +54,12 @@ exports.crearProducto = async (req, res) => {
     }
 };
 
-// PUT /api/productos/:id
+/**
+ * PUT /api/productos/:id
+ * Actualiza los datos de un producto existente. Requiere autenticación.
+ * Permite cambiar el campo disponible para marcar como agotado o disponible.
+ * Retorna 404 si el producto no existe.
+ */
 exports.editarProducto = async (req, res) => {
     try {
         const { nombre, precio, negocioId, disponible } = req.body;

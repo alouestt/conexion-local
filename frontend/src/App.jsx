@@ -1,3 +1,6 @@
+// Componente raíz de la aplicación.
+// Define la estructura de rutas y envuelve todo en AuthProvider para que
+// cualquier componente pueda acceder al estado de autenticación.
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
 import Navbar from "./components/Navbar";
@@ -21,10 +24,15 @@ function App() {
                 <Navbar />
                 <main className="main-content">
                     <Routes>
+                        {/* Rutas públicas: accesibles sin iniciar sesión */}
                         <Route path="/" element={<Home />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/registro" element={<Register />} />
                         <Route path="/mapa" element={<MapaNegocios />} />
+                        <Route path="/negocios" element={<Negocios />} />
+                        <Route path="/productos" element={<Productos />} />
+
+                        {/* Rutas protegidas: redirigen a /login si no hay sesión */}
                         <Route
                             path="/dashboard"
                             element={
@@ -49,7 +57,6 @@ function App() {
                                 </ProtectedRoute>
                             }
                         />
-                        <Route path="/negocios" element={<Negocios />} />
                         <Route
                             path="/negocios/:id/editar"
                             element={
@@ -58,7 +65,6 @@ function App() {
                                 </ProtectedRoute>
                             }
                         />
-                        <Route path="/productos" element={<Productos />} />
                         <Route
                             path="/productos/:id/editar"
                             element={
