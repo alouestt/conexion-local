@@ -5,7 +5,12 @@ import "../styles/pages.css";
 
 export default function CrearProducto() {
     const navigate = useNavigate();
-    const [form, setForm] = useState({ nombre: "", precio: "", negocioId: "" });
+    const [form, setForm] = useState({
+        nombre: "",
+        precio: "",
+        negocioId: "",
+        disponible: true,
+    });
     const [negocios, setNegocios] = useState([]);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
@@ -19,7 +24,9 @@ export default function CrearProducto() {
     }, []);
 
     const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+        const value =
+            e.target.type === "checkbox" ? e.target.checked : e.target.value;
+        setForm({ ...form, [e.target.name]: value });
     };
 
     const handleSubmit = async (e) => {
@@ -32,12 +39,18 @@ export default function CrearProducto() {
                 nombre: form.nombre,
                 precio: parseFloat(form.precio),
                 negocioId: parseInt(form.negocioId),
+                disponible: form.disponible,
             };
             const { data } = await productoService.crear(payload);
             setSuccess(
                 `¡Producto "${data.producto.nombre}" agregado exitosamente!`,
             );
-            setForm({ nombre: "", precio: "", negocioId: "" });
+            setForm({
+                nombre: "",
+                precio: "",
+                negocioId: "",
+                disponible: true,
+            });
             setTimeout(() => navigate("/productos"), 1500);
         } catch (err) {
             setError(err.response?.data?.error || "Error al crear el producto");
@@ -100,6 +113,20 @@ export default function CrearProducto() {
                                 </option>
                             ))}
                         </select>
+                    </div>
+                    <div className="form-group form-group-check">
+                        <label className="check-label">
+                            <input
+                                type="checkbox"
+                                name="disponible"
+                                checked={form.disponible}
+                                onChange={handleChange}
+                            />
+                            <span>Producto disponible</span>
+                        </label>
+                        <p className="check-hint">
+                            Desmarca si el producto está agotado
+                        </p>
                     </div>
                     <button
                         type="submit"

@@ -6,7 +6,7 @@ const PORT = 3000;
 
 // sequelize.sync() crea las tablas si no existen antes de aceptar peticiones
 sequelize
-    .sync()
+    .sync({ alter: true })
     .then(() => {
         console.log("Base de datos conectada");
         app.listen(PORT, () => {

@@ -6,7 +6,12 @@ import "../styles/pages.css";
 export default function EditarProducto() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [form, setForm] = useState({ nombre: "", precio: "", negocioId: "" });
+    const [form, setForm] = useState({
+        nombre: "",
+        precio: "",
+        negocioId: "",
+        disponible: true,
+    });
     const [negocios, setNegocios] = useState([]);
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
@@ -20,6 +25,7 @@ export default function EditarProducto() {
                     nombre: producto.nombre,
                     precio: producto.precio,
                     negocioId: producto.negocioId,
+                    disponible: producto.disponible !== false,
                 });
                 setNegocios(negs);
             })
@@ -28,7 +34,9 @@ export default function EditarProducto() {
     }, [id]);
 
     const handleChange = (e) => {
-        setForm({ ...form, [e.target.name]: e.target.value });
+        const value =
+            e.target.type === "checkbox" ? e.target.checked : e.target.value;
+        setForm({ ...form, [e.target.name]: value });
     };
 
     const handleSubmit = async (e) => {
@@ -41,6 +49,7 @@ export default function EditarProducto() {
                 nombre: form.nombre,
                 precio: parseFloat(form.precio),
                 negocioId: parseInt(form.negocioId),
+                disponible: form.disponible,
             };
             await productoService.editar(id, payload);
             setSuccess("¡Producto actualizado exitosamente!");
@@ -113,6 +122,20 @@ export default function EditarProducto() {
                                 </option>
                             ))}
                         </select>
+                    </div>
+                    <div className="form-group form-group-check">
+                        <label className="check-label">
+                            <input
+                                type="checkbox"
+                                name="disponible"
+                                checked={form.disponible}
+                                onChange={handleChange}
+                            />
+                            <span>Producto disponible</span>
+                        </label>
+                        <p className="check-hint">
+                            Desmarca si el producto está agotado
+                        </p>
                     </div>
                     <div className="form-actions">
                         <button

@@ -11,7 +11,7 @@ export const authService = {
 };
 
 export const negocioService = {
-    getAll: () => api.get("/negocios"),
+    getAll: (params) => api.get("/negocios", { params }),
     getById: (id) => api.get(`/negocios/${id}`),
     crear: (data) => api.post("/negocios", data),
     editar: (id, data) => api.put(`/negocios/${id}`, data),

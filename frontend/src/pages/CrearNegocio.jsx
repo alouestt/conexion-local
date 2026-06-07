@@ -5,7 +5,22 @@ import "../styles/pages.css";
 
 export default function CrearNegocio() {
     const navigate = useNavigate();
-    const [form, setForm] = useState({ nombre: "", descripcion: "" });
+    const CATEGORIAS = [
+        "Alimentos y bebidas",
+        "Ropa y accesorios",
+        "Artesanías",
+        "Servicios",
+        "Tecnología",
+        "Salud y belleza",
+        "Hogar y jardín",
+        "Otro",
+    ];
+
+    const [form, setForm] = useState({
+        nombre: "",
+        descripcion: "",
+        categoria: "",
+    });
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
@@ -24,7 +39,7 @@ export default function CrearNegocio() {
             setSuccess(
                 `¡Negocio "${data.negocio.nombre}" creado exitosamente!`,
             );
-            setForm({ nombre: "", descripcion: "" });
+            setForm({ nombre: "", descripcion: "", categoria: "" });
             setTimeout(() => navigate("/negocios"), 1500);
         } catch (err) {
             setError(err.response?.data?.error || "Error al crear el negocio");
@@ -56,6 +71,22 @@ export default function CrearNegocio() {
                             placeholder="Ej: Tienda Doña Rosa"
                             required
                         />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="categoria">Categoría</label>
+                        <select
+                            id="categoria"
+                            name="categoria"
+                            value={form.categoria}
+                            onChange={handleChange}
+                        >
+                            <option value="">Selecciona una categoría</option>
+                            {CATEGORIAS.map((c) => (
+                                <option key={c} value={c}>
+                                    {c}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div className="form-group">
                         <label htmlFor="descripcion">Descripción</label>

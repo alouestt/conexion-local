@@ -33,15 +33,17 @@ Desarrollar una aplicación web que permita a los micronegocios locales mejorar 
 ### Implementadas
 
 - Registro e inicio de sesión de usuarios
-- Consulta, creación y edición de negocios
-- Consulta, creación y edición de productos (con selector de negocio)
+- Consulta, creación y edición de negocios (con campo de categoría)
+- Búsqueda de negocios por nombre y categoría con filtros en tiempo real
+- Consulta, creación y edición de productos (con selector de negocio y disponibilidad)
+- Gestión de disponibilidad de productos (disponible / agotado)
+- Exploración pública del catálogo de negocios y productos sin necesidad de registro
 - Mapa interactivo de negocios (Leaflet + OpenStreetMap)
 - Panel de usuario autenticado (dashboard)
-- Rutas protegidas por autenticación
+- Rutas protegidas por autenticación; acciones de gestión ocultas a visitantes
 
 ### Planificadas
 
-- Búsqueda de negocios por ubicación y categoría
 - Sistema de reseñas y calificaciones
 - Panel de administración
 - Carga de imágenes mediante Cloudinary
@@ -155,21 +157,22 @@ conexion-local/
 
 ### Negocios
 
-| Método | Ruta                | Descripción               |
-| ------ | ------------------- | ------------------------- |
-| GET    | `/api/negocios`     | Listar todos los negocios |
-| GET    | `/api/negocios/:id` | Obtener un negocio por ID |
-| POST   | `/api/negocios`     | Crear un negocio          |
-| PUT    | `/api/negocios/:id` | Editar un negocio         |
+| Método | Ruta                               | Descripción                                                    |
+| ------ | ---------------------------------- | -------------------------------------------------------------- |
+| GET    | `/api/negocios`                    | Listar todos los negocios                                      |
+| GET    | `/api/negocios?nombre=&categoria=` | Filtrar negocios por nombre y/o categoría                      |
+| GET    | `/api/negocios/:id`                | Obtener un negocio por ID                                      |
+| POST   | `/api/negocios`                    | Crear un negocio (acepta `nombre`, `descripcion`, `categoria`) |
+| PUT    | `/api/negocios/:id`                | Editar un negocio                                              |
 
 ### Productos
 
-| Método | Ruta                 | Descripción                |
-| ------ | -------------------- | -------------------------- |
-| GET    | `/api/productos`     | Listar todos los productos |
-| GET    | `/api/productos/:id` | Obtener un producto por ID |
-| POST   | `/api/productos`     | Crear un producto          |
-| PUT    | `/api/productos/:id` | Editar un producto         |
+| Método | Ruta                 | Descripción                                                              |
+| ------ | -------------------- | ------------------------------------------------------------------------ |
+| GET    | `/api/productos`     | Listar todos los productos                                               |
+| GET    | `/api/productos/:id` | Obtener un producto por ID                                               |
+| POST   | `/api/productos`     | Crear un producto (acepta `nombre`, `precio`, `negocioId`, `disponible`) |
+| PUT    | `/api/productos/:id` | Editar un producto (incluye actualización de disponibilidad)             |
 
 ---
 

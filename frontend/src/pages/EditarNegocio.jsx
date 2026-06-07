@@ -6,7 +6,22 @@ import "../styles/pages.css";
 export default function EditarNegocio() {
     const { id } = useParams();
     const navigate = useNavigate();
-    const [form, setForm] = useState({ nombre: "", descripcion: "" });
+    const CATEGORIAS = [
+        "Alimentos y bebidas",
+        "Ropa y accesorios",
+        "Artesanías",
+        "Servicios",
+        "Tecnología",
+        "Salud y belleza",
+        "Hogar y jardín",
+        "Otro",
+    ];
+
+    const [form, setForm] = useState({
+        nombre: "",
+        descripcion: "",
+        categoria: "",
+    });
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
     const [loading, setLoading] = useState(false);
@@ -19,6 +34,7 @@ export default function EditarNegocio() {
                 setForm({
                     nombre: data.nombre,
                     descripcion: data.descripcion || "",
+                    categoria: data.categoria || "",
                 }),
             )
             .catch(() => setError("No se pudo cargar el negocio"))
@@ -76,6 +92,22 @@ export default function EditarNegocio() {
                             onChange={handleChange}
                             required
                         />
+                    </div>
+                    <div className="form-group">
+                        <label htmlFor="categoria">Categoría</label>
+                        <select
+                            id="categoria"
+                            name="categoria"
+                            value={form.categoria}
+                            onChange={handleChange}
+                        >
+                            <option value="">Selecciona una categoría</option>
+                            {CATEGORIAS.map((c) => (
+                                <option key={c} value={c}>
+                                    {c}
+                                </option>
+                            ))}
+                        </select>
                     </div>
                     <div className="form-group">
                         <label htmlFor="descripcion">Descripción</label>

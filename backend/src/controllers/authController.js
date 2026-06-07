@@ -21,9 +21,13 @@ exports.register = async (req, res) => {
             user,
         });
     } catch (error) {
-        res.status(500).json({
-            error: "Error al registrar usuario",
-        });
+        console.error("Error en register:", error.name, error.message);
+        if (error.name === "SequelizeUniqueConstraintError") {
+            return res
+                .status(409)
+                .json({ error: "El correo ya está registrado" });
+        }
+        res.status(500).json({ error: "Error al registrar usuario" });
     }
 };
 
