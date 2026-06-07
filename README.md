@@ -38,12 +38,14 @@ Desarrollar una aplicación web que permita a los micronegocios locales mejorar 
 - Consulta, creación y edición de productos (con selector de negocio y disponibilidad)
 - Gestión de disponibilidad de productos (disponible / agotado)
 - Exploración pública del catálogo de negocios y productos sin necesidad de registro
-- Mapa interactivo de negocios (Leaflet + OpenStreetMap)
+- Mapa interactivo de negocios (Leaflet + OpenStreetMap, datos de demostración)
 - Panel de usuario autenticado (dashboard)
 - Rutas protegidas por autenticación; acciones de gestión ocultas a visitantes
 
 ### Planificadas
 
+- Eliminación de negocios y productos
+- Mapa conectado a la base de datos real
 - Sistema de reseñas y calificaciones
 - Panel de administración
 - Carga de imágenes mediante Cloudinary
