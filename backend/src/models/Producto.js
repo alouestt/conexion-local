@@ -11,6 +11,10 @@ const Producto = sequelize.define("Producto", {
         type: DataTypes.FLOAT,
         allowNull: false,
     },
+    disponible: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+    },
 });
 
 module.exports = Producto;

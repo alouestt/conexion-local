@@ -10,6 +10,9 @@ const Negocio = sequelize.define("Negocio", {
     descripcion: {
         type: DataTypes.STRING,
     },
+    categoria: {
+        type: DataTypes.STRING,
+    },
 });
 
 const Producto = require("./Producto");

@@ -49,14 +49,7 @@ function App() {
                                 </ProtectedRoute>
                             }
                         />
-                        <Route
-                            path="/negocios"
-                            element={
-                                <ProtectedRoute>
-                                    <Negocios />
-                                </ProtectedRoute>
-                            }
-                        />
+                        <Route path="/negocios" element={<Negocios />} />
                         <Route
                             path="/negocios/:id/editar"
                             element={
@@ -65,14 +58,7 @@ function App() {
                                 </ProtectedRoute>
                             }
                         />
-                        <Route
-                            path="/productos"
-                            element={
-                                <ProtectedRoute>
-                                    <Productos />
-                                </ProtectedRoute>
-                            }
-                        />
+                        <Route path="/productos" element={<Productos />} />
                         <Route
                             path="/productos/:id/editar"
                             element={

@@ -1,20 +1,45 @@
-import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { negocioService } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 import "../styles/lista.css";
 
+const CATEGORIAS = [
+    "Alimentos y bebidas",
+    "Ropa y accesorios",
+    "Artesanías",
+    "Servicios",
+    "Tecnología",
+    "Salud y belleza",
+    "Hogar y jardín",
+    "Otro",
+];
+
 export default function Negocios() {
+    const { user } = useAuth();
+    const navigate = useNavigate();
     const [negocios, setNegocios] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [busqueda, setBusqueda] = useState("");
+    const [categoriaFiltro, setCategoriaFiltro] = useState("");
 
-    useEffect(() => {
+    const cargarNegocios = useCallback(() => {
+        setLoading(true);
+        const params = {};
+        if (busqueda.trim()) params.nombre = busqueda.trim();
+        if (categoriaFiltro) params.categoria = categoriaFiltro;
         negocioService
-            .getAll()
+            .getAll(params)
             .then(({ data }) => setNegocios(data))
             .catch(() => setError("No se pudieron cargar los negocios"))
             .finally(() => setLoading(false));
-    }, []);
+    }, [busqueda, categoriaFiltro]);
+
+    useEffect(() => {
+        const timer = setTimeout(cargarNegocios, 300);
+        return () => clearTimeout(timer);
+    }, [cargarNegocios]);
 
     return (
         <div className="lista-page">
@@ -23,9 +48,44 @@ export default function Negocios() {
                     <h1>Negocios</h1>
                     <p>Listado de todos los negocios registrados</p>
                 </div>
-                <Link to="/negocios/nuevo" className="btn btn-primary">
-                    + Nuevo negocio
-                </Link>
+                {user && (
+                    <Link to="/negocios/nuevo" className="btn btn-primary">
+                        + Nuevo negocio
+                    </Link>
+                )}
+            </div>
+
+            <div className="lista-filtros">
+                <input
+                    type="text"
+                    className="filtro-input"
+                    placeholder="Buscar por nombre..."
+                    value={busqueda}
+                    onChange={(e) => setBusqueda(e.target.value)}
+                />
+                <select
+                    className="filtro-select"
+                    value={categoriaFiltro}
+                    onChange={(e) => setCategoriaFiltro(e.target.value)}
+                >
+                    <option value="">Todas las categorías</option>
+                    {CATEGORIAS.map((c) => (
+                        <option key={c} value={c}>
+                            {c}
+                        </option>
+                    ))}
+                </select>
+                {(busqueda || categoriaFiltro) && (
+                    <button
+                        className="btn btn-secondary"
+                        onClick={() => {
+                            setBusqueda("");
+                            setCategoriaFiltro("");
+                        }}
+                    >
+                        Limpiar
+                    </button>
+                )}
             </div>
 
             {error && <div className="alert alert-error">{error}</div>}
@@ -35,10 +95,16 @@ export default function Negocios() {
             ) : negocios.length === 0 ? (
                 <div className="lista-empty">
                     <span>🏪</span>
-                    <p>No hay negocios registrados aún.</p>
-                    <Link to="/negocios/nuevo" className="btn btn-accent">
-                        Registrar el primero
-                    </Link>
+                    <p>
+                        {busqueda || categoriaFiltro
+                            ? "No se encontraron negocios con esos filtros."
+                            : "No hay negocios registrados aún."}
+                    </p>
+                    {user && !busqueda && !categoriaFiltro && (
+                        <Link to="/negocios/nuevo" className="btn btn-accent">
+                            Registrar el primero
+                        </Link>
+                    )}
                 </div>
             ) : (
                 <div className="lista-tabla-wrapper">
@@ -47,9 +113,10 @@ export default function Negocios() {
                             <tr>
                                 <th>ID</th>
                                 <th>Nombre</th>
+                                <th>Categoría</th>
                                 <th>Descripción</th>
                                 <th>Productos</th>
-                                <th>Acciones</th>
+                                {user && <th>Acciones</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -57,6 +124,15 @@ export default function Negocios() {
                                 <tr key={n.id}>
                                     <td className="td-id">#{n.id}</td>
                                     <td className="td-nombre">{n.nombre}</td>
+                                    <td>
+                                        {n.categoria ? (
+                                            <span className="badge">
+                                                {n.categoria}
+                                            </span>
+                                        ) : (
+                                            <span className="sin-dato">—</span>
+                                        )}
+                                    </td>
                                     <td className="td-desc">
                                         {n.descripcion || (
                                             <span className="sin-dato">—</span>
@@ -67,19 +143,41 @@ export default function Negocios() {
                                             {n.Productos?.length ?? 0}
                                         </span>
                                     </td>
-                                    <td>
-                                        <Link
-                                            to={`/negocios/${n.id}/editar`}
-                                            className="btn-accion"
-                                        >
-                                            Editar
-                                        </Link>
-                                    </td>
+                                    {user && (
+                                        <td>
+                                            <Link
+                                                to={`/negocios/${n.id}/editar`}
+                                                className="btn-accion"
+                                            >
+                                                Editar
+                                            </Link>
+                                        </td>
+                                    )}
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
+            )}
+
+            {!user && (
+                <p className="lista-nota">
+                    ¿Eres vendedor?{" "}
+                    <button
+                        className="link-btn"
+                        onClick={() => navigate("/registro")}
+                    >
+                        Regístrate
+                    </button>{" "}
+                    o{" "}
+                    <button
+                        className="link-btn"
+                        onClick={() => navigate("/login")}
+                    >
+                        inicia sesión
+                    </button>{" "}
+                    para gestionar tu negocio.
+                </p>
             )}
         </div>
     );

@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { productoService } from "../services/api";
+import { useAuth } from "../context/AuthContext";
 import "../styles/lista.css";
 
 export default function Productos() {
+    const { user } = useAuth();
+    const navigate = useNavigate();
     const [productos, setProductos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
@@ -30,9 +33,11 @@ export default function Productos() {
                     <h1>Productos</h1>
                     <p>Listado de todos los productos publicados</p>
                 </div>
-                <Link to="/productos/nuevo" className="btn btn-primary">
-                    + Nuevo producto
-                </Link>
+                {user && (
+                    <Link to="/productos/nuevo" className="btn btn-primary">
+                        + Nuevo producto
+                    </Link>
+                )}
             </div>
 
             {error && <div className="alert alert-error">{error}</div>}
@@ -43,9 +48,11 @@ export default function Productos() {
                 <div className="lista-empty">
                     <span>📦</span>
                     <p>No hay productos registrados aún.</p>
-                    <Link to="/productos/nuevo" className="btn btn-accent">
-                        Agregar el primero
-                    </Link>
+                    {user && (
+                        <Link to="/productos/nuevo" className="btn btn-accent">
+                            Agregar el primero
+                        </Link>
+                    )}
                 </div>
             ) : (
                 <div className="lista-tabla-wrapper">
@@ -56,7 +63,8 @@ export default function Productos() {
                                 <th>Nombre</th>
                                 <th>Precio</th>
                                 <th>Negocio</th>
-                                <th>Acciones</th>
+                                <th>Disponibilidad</th>
+                                {user && <th>Acciones</th>}
                             </tr>
                         </thead>
                         <tbody>
@@ -77,18 +85,51 @@ export default function Productos() {
                                         )}
                                     </td>
                                     <td>
-                                        <Link
-                                            to={`/productos/${p.id}/editar`}
-                                            className="btn-accion"
-                                        >
-                                            Editar
-                                        </Link>
+                                        {p.disponible === false ? (
+                                            <span className="badge-agotado">
+                                                Agotado
+                                            </span>
+                                        ) : (
+                                            <span className="badge-disponible">
+                                                Disponible
+                                            </span>
+                                        )}
                                     </td>
+                                    {user && (
+                                        <td>
+                                            <Link
+                                                to={`/productos/${p.id}/editar`}
+                                                className="btn-accion"
+                                            >
+                                                Editar
+                                            </Link>
+                                        </td>
+                                    )}
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 </div>
+            )}
+
+            {!user && (
+                <p className="lista-nota">
+                    ¿Eres vendedor?{" "}
+                    <button
+                        className="link-btn"
+                        onClick={() => navigate("/registro")}
+                    >
+                        Regístrate
+                    </button>{" "}
+                    o{" "}
+                    <button
+                        className="link-btn"
+                        onClick={() => navigate("/login")}
+                    >
+                        inicia sesión
+                    </button>{" "}
+                    para publicar y gestionar productos.
+                </p>
             )}
         </div>
     );
