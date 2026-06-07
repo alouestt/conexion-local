@@ -20,13 +20,20 @@ app.use(
 
 app.use(express.json());
 
+// Swagger en producción (Render)
+if (process.env.NODE_ENV === "production") {
+    const swaggerUi = require("swagger-ui-express");
+    const swaggerSpec = require("./config/swagger");
+    app.get("/api/docs/swagger.json", (req, res) => res.json(swaggerSpec));
+    app.use("/api/docs", swaggerUi.serve);
+    app.get("/api/docs", swaggerUi.setup(swaggerSpec));
+}
+
 // API routes
 app.use("/api", authRoutes);
 app.use("/api", negocioRoutes);
 app.use("/api", productoRoutes);
 
-app.get("/", (req, res) => {
-    res.send("API funcionando");
-});
+app.get("/", (req, res) => res.send("API funcionando"));
 
 module.exports = app;
