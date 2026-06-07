@@ -1,0 +1,74 @@
+name: CI/CD ConexiónLocal
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: conexion_local_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Instalar dependencias del backend
+        run: |
+          cd backend
+          npm install
+
+      - name: Ejecutar lint del backend
+        run: |
+          cd backend
+          npm run lint
+
+      - name: Ejecutar pruebas del backend
+        env:
+          DB_NAME: conexion_local_test
+          DB_USER: postgres
+          DB_PASSWORD: postgres
+          DB_HOST: localhost
+          DB_DIALECT: postgres
+          JWT_SECRET: secret_test
+        run: |
+          cd backend
+          npm test -- --coverage
+
+      - name: Instalar dependencias del frontend
+        run: |
+          cd frontend
+          npm install
+
+      - name: Ejecutar lint del frontend
+        run: |
+          cd frontend
+          npm run lint
+
+      - name: Build del frontend
+        run: |
+          cd frontend
+          npm run build
