@@ -9,12 +9,17 @@ const User = sequelize.define("User", {
     },
     correo: {
         type: DataTypes.STRING,
-        unique: true, // no permite dos usuarios con el mismo correo
+        unique: true,
         allowNull: false,
     },
     password: {
         type: DataTypes.STRING,
-        allowNull: false, // se almacena ya hasheado con bcrypt
+        allowNull: false,
+    },
+    rol: {
+        type: DataTypes.ENUM("comprador", "vendedor", "admin"),
+        allowNull: false,
+        defaultValue: "comprador",
     },
 });
 

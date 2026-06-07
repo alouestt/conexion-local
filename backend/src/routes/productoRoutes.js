@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const productoController = require("../controllers/productoController");
+const verificarToken = require("../middleware/auth");
 
-router.get("/productos", productoController.obtenerProductos); // GET  /api/productos
-router.get("/productos/:id", productoController.obtenerProducto); // GET  /api/productos/:id
-router.post("/productos", productoController.crearProducto); // POST /api/productos
-router.put("/productos/:id", productoController.editarProducto); // PUT  /api/productos/:id
+router.get("/productos", productoController.obtenerProductos);
+router.get("/productos/:id", productoController.obtenerProducto);
+router.post("/productos", verificarToken, productoController.crearProducto);
+router.put("/productos/:id", verificarToken, productoController.editarProducto);
 
 module.exports = router;
